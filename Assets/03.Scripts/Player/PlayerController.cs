@@ -16,11 +16,15 @@ public class PlayerController : MonoBehaviour
     private Animator _animator;
     private StateMachine<PlayerController> _stateMachine;
 
-    private Vector3 _moveDirection;
-    private float _turnSmoothVelocity;
+    private Vector3 _inputDirection;
+    private bool _isPressAttack;
 
     #region Properties
     public Animator Animator => _animator;
+    public Vector3 InputDirection => _inputDirection;
+    public bool IsPressAttack => _isPressAttack;
+    public float MoveSpeed => _moveSpeed;
+    public float TurnSmoothTime => _turnSmoothTime;
     #endregion
 
     private void Awake()
@@ -29,6 +33,8 @@ public class PlayerController : MonoBehaviour
         _animator = _modelRoot.GetComponentInChildren<Animator>();
 		_transform = transform;
 
+        _inputDirection = Vector3.zero;
+
         InitState();
 	}
 
@@ -36,22 +42,16 @@ public class PlayerController : MonoBehaviour
 	{
 		float horizontal = Input.GetAxisRaw("Horizontal");
 		float vertical = Input.GetAxisRaw("Vertical");
-		Vector3 inputDirection = new Vector3(horizontal, 0, vertical).normalized;
+        _isPressAttack = Input.GetMouseButtonDown(0);
+        _inputDirection = new Vector3(horizontal, 0, vertical).normalized;
 
-		if(inputDirection != Vector3.zero)
-		{
-			float targetAngle = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg;        //Unity ClockWise
-			float smoothAngle = Mathf.SmoothDampAngle(_transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, _turnSmoothTime);
-			_transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
-
-			_moveDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-			_controller.Move(_moveDirection.normalized * Time.deltaTime * _moveSpeed);
-		}
+        _stateMachine.Update(Time.deltaTime);
 	}
 
     private void InitState()
     {
         _stateMachine = new StateMachine<PlayerController>(this, new PlayerIdleState());
-        //_stateMachine.AddState()
+        _stateMachine.AddState(new PlayerAttackState());
+        _stateMachine.AddState(new PlayerMoveState());
     }
 }

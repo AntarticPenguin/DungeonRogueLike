@@ -78,6 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84351e2360676794cb708b55865f3069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _modelRoot: {fileID: 872617512668088680}
   _moveSpeed: 7.57
   _turnSmoothTime: 0.1
 --- !u!143 &4187511486453822413
