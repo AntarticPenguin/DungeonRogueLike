@@ -58,3 +58,7 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Ignore paid resources
+/[Aa]ssets/04.Download Resources/**/*.fbx
+/[Aa]ssets/04.Download Resources/**/*.tga
+/[Aa]ssets/04.Download Resources/**/*.png
