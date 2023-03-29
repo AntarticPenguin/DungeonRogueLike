@@ -24,10 +24,43 @@ public class DungeonGenerator : MonoBehaviour
 
         //BSP를 이용한 공간 분할
         BinarySpacePartitioner bsp = new BinarySpacePartitioner(dungeonSize);
-        RoomNode rootNode = bsp.MakeRoomTree(maxIterations);
+        RoomNode treeNode = bsp.CreateRoomTree(maxIterations);
 
         //만들어진 트리를 이용해 룸 생성
+        CreateRooms(treeNode);
 
         //방 연결
+    }
+
+    private void CreateRooms(RoomNode treeNode)
+    {
+        List<RoomNode> leafNodes = new List<RoomNode>();
+
+        TraverseAndGetLeafNodes(treeNode, leafNodes);
+
+        GameObject room = Resources.Load<GameObject>("TestRoom");
+
+        for (int i = 0; i < leafNodes.Count; i++)
+        {
+            leafNodes[i].InitRoomSizeBySpace();
+            GameObject instance = Instantiate(room);
+            instance.transform.position = new Vector3(leafNodes[i].RoomPosition.x, 0, leafNodes[i].RoomPosition.y);
+            instance.transform.localScale = new Vector3(leafNodes[i].RoomScale.x, leafNodes[i].RoomScale.y);
+        }
+    }
+
+    private void TraverseAndGetLeafNodes(RoomNode node, List<RoomNode> outList)
+    {
+        if (null == node)
+            return;
+
+        TraverseAndGetLeafNodes(node.Left, outList);
+
+        if (node.IsLeaf)
+        {
+            outList.Add(node);
+        }
+            
+        TraverseAndGetLeafNodes(node.Right, outList);
     }
 }
