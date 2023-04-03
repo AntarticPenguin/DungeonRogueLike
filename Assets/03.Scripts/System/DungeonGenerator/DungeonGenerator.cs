@@ -30,6 +30,7 @@ public class DungeonGenerator : MonoBehaviour
         CreateRooms(treeNode);
 
         //방 연결
+        DrawCorridor(treeNode);
     }
 
     private void CreateRooms(RoomNode treeNode)
@@ -62,5 +63,24 @@ public class DungeonGenerator : MonoBehaviour
         }
             
         TraverseAndGetLeafNodes(node.Right, outList);
+    }
+
+    private void DrawCorridor(RoomNode node)
+    {
+        if(node.IsLeaf)
+        {
+            return;
+        }
+
+        GameObject go = Resources.Load<GameObject>("TestLineRenderer");
+        GameObject instance = GameObject.Instantiate(go);
+        LineRenderer line = instance.GetComponent<LineRenderer>();
+        line.SetPosition(0, new Vector3(node.Left.SpaceCenter.x, 0.0f, node.Left.SpaceCenter.y));
+        line.SetPosition(1, new Vector3(node.Right.SpaceCenter.x, 0.0f, node.Right.SpaceCenter.y));
+        line.startWidth = 1.5f;
+        line.endWidth= 1.5f;
+
+        DrawCorridor(node.Left);
+        DrawCorridor(node.Right);
     }
 }
