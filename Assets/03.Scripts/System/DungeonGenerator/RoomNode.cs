@@ -23,32 +23,30 @@ public class RoomNode
 
     public int SpaceWidth => _spaceSize.width;
     public int SpaceHeight => _spaceSize.height;
-    public Vector2Int BottomLeftPosition => new Vector2Int(_spaceSize.xMin, _spaceSize.yMin);
-    public Vector2Int TopRightPosition => new Vector2Int(_spaceSize.xMax, _spaceSize.yMax);
+    public Vector2 SpaceCenter => _spaceSize.center;
+    public Vector2Int BottomLeftAnchor => new Vector2Int(_spaceSize.xMin, _spaceSize.yMin);
+    public Vector2Int TopRightAnchor => new Vector2Int(_spaceSize.xMax, _spaceSize.yMax);
     public Vector2Int RoomPosition => _roomSize.position;
     public Vector2Int RoomScale => new Vector2Int(_roomSize.width, _roomSize.height);
-    public Vector2 SpaceCenter => _spaceSize.center;
 
     public bool IsLeaf => (null == _left) && (null == _right);
-
-    public eSplitDirection SplittedDirection { get; set; }
 
     public RoomNode(RectInt size)
     {
         _spaceSize = size;
     }
 
-    public void InitRoomSizeBySpace()
+    public void InitRoomSizeBySpace(int minPadding, int maxPadding)
     {
-        int deltaX = Random.Range(1, Mathf.FloorToInt(_spaceSize.width / 3.0f));
-        int deltaY = Random.Range(1, Mathf.FloorToInt(_spaceSize.height / 3.0f));
+        int deltaX = Random.Range(minPadding, Mathf.FloorToInt(_spaceSize.width / (float)maxPadding));
+        int deltaY = Random.Range(minPadding, Mathf.FloorToInt(_spaceSize.height / (float)maxPadding));
         int x = _spaceSize.x + deltaX;
         int y = _spaceSize.y + deltaY;
         int w = _spaceSize.width - deltaX;      //이동한 좌표만큼 빼줘서 길이를 맞춰준다.
         int h = _spaceSize.height - deltaY;
 
-        w -= Random.Range(1, w / 3);
-        h -= Random.Range(1, h / 3);
+        w -= Random.Range(minPadding, w / maxPadding);
+        h -= Random.Range(minPadding, h / maxPadding);
 
         _roomSize = new RectInt(x, y, w, h);
     }
