@@ -57,11 +57,11 @@ public class BinarySpacePartitioner
             );
 
             //TODO: 게임 에셋으로 교체할 부분
-            GameObject go = Resources.Load<GameObject>("TestLineRenderer");
-            GameObject instance = GameObject.Instantiate(go);
-            LineRenderer line = instance.GetComponent<LineRenderer>();
-            line.SetPosition(0, new Vector3(node.BottomLeftAnchor.x, 0.1f, node.BottomLeftAnchor.y + dividedHeight));
-            line.SetPosition(1, new Vector3(node.TopRightAnchor.x, 0.1f, node.BottomLeftAnchor.y + dividedHeight));
+            //GameObject go = Resources.Load<GameObject>("TestLineRenderer");
+            //GameObject instance = GameObject.Instantiate(go);
+            //LineRenderer line = instance.GetComponent<LineRenderer>();
+            //line.SetPosition(0, new Vector3(node.BottomLeftAnchor.x, 0.1f, node.BottomLeftAnchor.y + dividedHeight));
+            //line.SetPosition(1, new Vector3(node.TopRightAnchor.x, 0.1f, node.BottomLeftAnchor.y + dividedHeight));
 
             RoomNode leftNode = new RoomNode(topRoomSize);
             RoomNode rightNode = new RoomNode(bottomRoomSize);
@@ -85,11 +85,11 @@ public class BinarySpacePartitioner
             );
 
             //TODO: 게임 에셋으로 교체할 부분
-            GameObject go = Resources.Load<GameObject>("TestLineRenderer");
-            GameObject instance = GameObject.Instantiate(go);
-            LineRenderer line = instance.GetComponent<LineRenderer>();
-            line.SetPosition(0, new Vector3(node.BottomLeftAnchor.x + dividedWidth, 0.1f, node.BottomLeftAnchor.y));
-            line.SetPosition(1, new Vector3(node.BottomLeftAnchor.x + dividedWidth, 0.1f, node.TopRightAnchor.y));
+            //GameObject go = Resources.Load<GameObject>("TestLineRenderer");
+            //GameObject instance = GameObject.Instantiate(go);
+            //LineRenderer line = instance.GetComponent<LineRenderer>();
+            //line.SetPosition(0, new Vector3(node.BottomLeftAnchor.x + dividedWidth, 0.1f, node.BottomLeftAnchor.y));
+            //line.SetPosition(1, new Vector3(node.BottomLeftAnchor.x + dividedWidth, 0.1f, node.TopRightAnchor.y));
 
             RoomNode leftNode = new RoomNode(leftRoomSize);
             RoomNode rightNode = new RoomNode(rightRoomSize);

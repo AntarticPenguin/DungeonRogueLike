@@ -26,8 +26,7 @@ public class RoomNode
     public Vector2 SpaceCenter => _spaceSize.center;
     public Vector2Int BottomLeftAnchor => new Vector2Int(_spaceSize.xMin, _spaceSize.yMin);
     public Vector2Int TopRightAnchor => new Vector2Int(_spaceSize.xMax, _spaceSize.yMax);
-    public Vector2Int RoomPosition => _roomSize.position;
-    public Vector2Int RoomScale => new Vector2Int(_roomSize.width, _roomSize.height);
+    public RectInt RoomSize => _roomSize;
 
     public bool IsLeaf => (null == _left) && (null == _right);
 
