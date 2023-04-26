@@ -26,9 +26,14 @@ public class RoomNode
     public Vector2 SpaceCenter => _spaceSize.center;
     public Vector2Int BottomLeftAnchor => new Vector2Int(_spaceSize.xMin, _spaceSize.yMin);
     public Vector2Int TopRightAnchor => new Vector2Int(_spaceSize.xMax, _spaceSize.yMax);
-    public RectInt RoomSize => _roomSize;
+    public ref RectInt RoomSize => ref _roomSize;
 
     public bool IsLeaf => (null == _left) && (null == _right);
+    public bool HasLeaf { get; set; }
+    public string RoomName { get; set; }
+
+    public Vector3 DoorPosition { get; private set; }
+    public Quaternion DoorRotation { get; private set; }
 
     public RoomNode(RectInt size)
     {
@@ -47,6 +52,38 @@ public class RoomNode
         w -= Random.Range(minPadding, w / maxPadding);
         h -= Random.Range(minPadding, h / maxPadding);
 
-        _roomSize = new RectInt(x, y, w, h);
+        //홀,짝수 길이 보정
+        int roomWidth = (w % 2 == 0) ? w - 1 : w;
+        int roomHeight = (h % 2 == 0) ? h - 1 : h;
+
+        _roomSize = new RectInt(x, y, roomWidth, roomHeight);
+    }
+
+    public void CalculateDoorPosition(Vector2 from, Vector2 to)
+    {
+        if(from.x < to.x)
+        {
+            //왼쪽 방: 오른쪽 모서리에 배치. 문은 왼쪽방향
+            DoorPosition = new Vector3(RoomSize.xMax, 0, to.y);
+            DoorRotation = Quaternion.Euler(0f, -90f, 0f);
+        }
+        else if(from.x > to.x)
+        {
+            //오른쪽 방: 왼쪽 모서리에 배치. 문은 오른쪽 방향
+            DoorPosition = new Vector3(RoomSize.xMin, 0, to.y);
+            DoorRotation = Quaternion.Euler(0f, 90f, 0f);
+        }
+        else if(from.y < to.y)
+        {
+            //아래쪽 방: 위쪽 모서리에 배치. 문은 아래 방향
+            DoorPosition = new Vector3(to.x, 0, RoomSize.yMax);
+            DoorRotation = Quaternion.Euler(0f, 180f, 0f);
+        }
+        else if(from.y > to.y)
+        {
+            //위쪽 방: 아래쪽 모서리에 배치. 문은 위쪽 방향
+            DoorPosition = new Vector3(to.x, 0, RoomSize.yMin);
+            DoorRotation = Quaternion.identity;
+        }
     }
 }

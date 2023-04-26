@@ -24,9 +24,9 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] int _maxRoomPadding = 3;
 
     [Header("Assets")]
-    public GameObject _testRoomPrefab;
     [SerializeField] GameObject _tilePrefab;
     [SerializeField] GameObject _wallPrefab;
+    [SerializeField] GameObject _doorwayPrefab;
     [SerializeField] GameObject _backfillPrefab;
 
     private void Start()
@@ -42,110 +42,157 @@ public class DungeonGenerator : MonoBehaviour
         BinarySpacePartitioner bsp = new BinarySpacePartitioner(dungeonSize, _minDivideRatio, 1 - _minDivideRatio);
         RoomNode treeNode = bsp.CreateRoomTree(_maxIterations);
 
-        //만들어진 트리를 이용해 룸 생성
-        CreateRooms(treeNode);
+        InitRoomInfo(treeNode);
 
-        //방 연결
+        //만들어진 트리를 이용해 룸 생성
+        CreateRooms();
+
+        //복도 생성(방 연결)
         DrawCorridor(treeNode);
     }
 
-    private void CreateRooms(RoomNode treeNode)
+
+    List<RoomNode> leafNodes = new List<RoomNode>();    //리프노드 = 실제 생성될 룸노드
+    List<RoomNode> doorNodes = new List<RoomNode>();    //룸노드 중, 방을 연결해주는 노드(복도와 복도 아님)
+    private void InitRoomInfo(RoomNode treeNode)
     {
-        List<RoomNode> leafNodes = new List<RoomNode>();
+        TraverseNode(treeNode);
 
-        TraverseAndGetLeafNodes(treeNode, leafNodes);
-
-        for (int i = 0; i < leafNodes.Count; i++)
+        for(int i = 0; i < leafNodes.Count; i++)
         {
             leafNodes[i].InitRoomSizeBySpace(_minRoomPadding, _maxRoomPadding);
+        }
 
-            //Test Room Render
-            //{
-            //    GameObject instance = Instantiate(_testRoomPrefab);
-            //    instance.transform.position = new Vector3(leafNodes[i].RoomSize.xMin, 0, leafNodes[i].RoomSize.yMin);
-            //    instance.transform.localScale = new Vector3(leafNodes[i].RoomSize.width, leafNodes[i].RoomSize.height, 1.0f);
-            //}
+        for(int i = 0; i < doorNodes.Count; i++)
+        {
+            RoomNode node = doorNodes[i];
+            node.Left.CalculateDoorPosition(node.Left.SpaceCenter, node.Right.SpaceCenter);
+            node.Right.CalculateDoorPosition(node.Right.SpaceCenter, node.Left.SpaceCenter);
+        }
+    }
 
-            RectInt roomSize = leafNodes[i].RoomSize;
+    private void CreateRooms()
+    {
+        for (int i = 0; i < leafNodes.Count; i++)
+        {
+            RectInt room = leafNodes[i].RoomSize;
             int tileSize = 2;
+            float tilePivot = 0.5f;
 
-            for (int y = roomSize.yMin; y < roomSize.yMax; y += tileSize)
+            for (int y = room.yMin; y < room.yMax; y += tileSize)
             {
-                for (int x = roomSize.xMin; x < roomSize.xMax; x += tileSize)
+                for (int x = room.xMin; x < room.xMax; x += tileSize)
                 {
                     GameObject instance = Instantiate(_tilePrefab);
-                    instance.transform.position = new Vector3(x, 0, y);
+                    instance.transform.position = new Vector3(x + tilePivot, 0, y + tilePivot);
                     instance.transform.localScale = Vector3.one;
                 }
             }
 
-            CreateWalls(roomSize);
+            CreateWalls(leafNodes[i]);
         }
     }
 
-    private void CreateWalls(RectInt room)
+    private void CreateWalls(RoomNode roomNode)
     {
         int wallWidth = 1;
-        int roomWidth = (room.width % 2 == 0) ? room.width - 1 : room.width;
-        int roomHeight = (room.height % 2 == 0) ? room.height - 1 : room.height;
+        RectInt size = roomNode.RoomSize;
+        int width = size.width;
+        int height = size.height;
 
-        //Max좌표 보정
-        room.xMax = room.xMin + roomWidth;
-        room.yMax = room.yMin + roomHeight;
-
-        Vector2 offset = new Vector2(1, 1);
-
-        Debug.Log($"Width:{roomWidth}, Height: {roomHeight}");
-
-        //Bottom edge
-        for (int i = 1; i < roomWidth; i++)
-        {
-            GameObject instance = Instantiate(_wallPrefab);
-            instance.transform.position = new Vector3(room.xMin - offset.x + i * wallWidth, 0, room.yMin - offset.y);
-            instance.transform.localScale = Vector3.one;
-        }
-
-        //Right side edge
-        for (int i = 1; i < roomHeight; i++)
-        {
-            GameObject instance = Instantiate(_wallPrefab);
-            instance.transform.position = new Vector3(room.xMax, 0, room.yMin - offset.y + i * wallWidth);
-            instance.transform.eulerAngles = new Vector3(0, -90, 0);
-            instance.transform.localScale = Vector3.one;
-        }
+        int xPos = 0;
+        int zPos = 0;
+        int doorXMin = Mathf.CeilToInt(roomNode.DoorPosition.x - 3);
+        int doorXMax = Mathf.FloorToInt(roomNode.DoorPosition.x + 3);
+        int doorZMin = Mathf.CeilToInt(roomNode.DoorPosition.z - 3);
+        int doorZMax = Mathf.FloorToInt(roomNode.DoorPosition.z + 3);
 
         //Top edge
-        for (int i = 1; i < roomWidth; i++)
+        for (int i = 0; i <= width; i++)
         {
+            xPos = size.xMin + i * wallWidth;
+            zPos = size.yMax;
+
+            if((doorXMin < xPos && xPos < doorXMax) && ((int)roomNode.DoorPosition.z == zPos))
+            {
+                continue;
+            }
+
             GameObject instance = Instantiate(_wallPrefab);
-            instance.transform.position = new Vector3(room.xMin + i * wallWidth, 0, room.yMax);
+            instance.transform.position = new Vector3(xPos, 0, size.yMax);
             instance.transform.eulerAngles = new Vector3(0, -180, 0);
             instance.transform.localScale = Vector3.one;
         }
 
-        //Left side edge
-        for (int i = 1; i < roomHeight; i++)
+        //Bottom edge
+        for (int i = 0; i <= width; i++)
         {
+            xPos = size.xMin + i * wallWidth;
+            zPos = size.yMin;
+
+            if ((doorXMin < xPos && xPos < doorXMax) && ((int)roomNode.DoorPosition.z == zPos))
+            {
+                continue;
+            }
+
             GameObject instance = Instantiate(_wallPrefab);
+            instance.transform.position = new Vector3(xPos, 0, zPos);
+            instance.transform.localScale = Vector3.one;
+        }
+
+        //Left side edge
+        for (int i = height - 1; i > 0; i--)
+        {
+            xPos = size.xMin;
+            zPos = size.yMin + i * wallWidth;
+
+            if ((doorZMin < zPos && zPos < doorZMax) && ((int)roomNode.DoorPosition.x == xPos))
+            {
+                continue;
+            }
+
+            GameObject instance = Instantiate(_wallPrefab);
+            instance.transform.position = new Vector3(xPos, 0, zPos);
             instance.transform.eulerAngles = new Vector3(0, 90, 0);
-            instance.transform.position = new Vector3(room.xMin - offset.x, 0, room.yMin + i * wallWidth);
+            instance.transform.localScale = Vector3.one;
+        }
+
+        //Right side edge
+        for (int i = height - 1; i > 0; i--)
+        {
+            xPos = size.xMax;
+            zPos = size.yMin + i * wallWidth;
+
+            if ((doorZMin < zPos && zPos < doorZMax) && ((int)roomNode.DoorPosition.x == xPos))
+            {
+                continue;
+            }
+
+            GameObject instance = Instantiate(_wallPrefab);
+            instance.transform.position = new Vector3(xPos, 0, zPos);
+            instance.transform.eulerAngles = new Vector3(0, -90, 0);
             instance.transform.localScale = Vector3.one;
         }
     }
 
-    private void TraverseAndGetLeafNodes(RoomNode node, List<RoomNode> outList)
+    private void TraverseNode(RoomNode node)
     {
         if (null == node)
             return;
 
-        TraverseAndGetLeafNodes(node.Left, outList);
+        TraverseNode(node.Left);
 
         if (node.IsLeaf)
         {
-            outList.Add(node);
+            leafNodes.Add(node);
+        }
+
+        if(node.HasLeaf)
+        {
+            doorNodes.Add(node);
         }
             
-        TraverseAndGetLeafNodes(node.Right, outList);
+        TraverseNode(node.Right);
     }
 
     private void DrawCorridor(RoomNode node)
@@ -155,16 +202,38 @@ public class DungeonGenerator : MonoBehaviour
             return;
         }
 
-        //TODO: 룸을 가로지르는 복도는 어떻게 지울건가
+        //복도 문 생성
+        if (node.HasLeaf)
+        {
+            {
+                GameObject instance = Instantiate(_doorwayPrefab);
+                instance.transform.position = node.Left.DoorPosition;
+                instance.transform.rotation = node.Left.DoorRotation;
+                instance.transform.localScale = Vector3.one;
+            }
+            {
+                GameObject instance = Instantiate(_doorwayPrefab);
+                instance.transform.position = node.Right.DoorPosition;
+                instance.transform.rotation = node.Right.DoorRotation;
+                instance.transform.localScale = Vector3.one;
+            }
+        }
 
         //TODO: 게임 에셋으로 교체할 부분
-        GameObject go = Resources.Load<GameObject>("TestLineRenderer");
-        GameObject instance = Instantiate(go);
-        LineRenderer line = instance.GetComponent<LineRenderer>();
-        line.SetPosition(0, new Vector3(node.Left.SpaceCenter.x, 0.0f, node.Left.SpaceCenter.y));
-        line.SetPosition(1, new Vector3(node.Right.SpaceCenter.x, 0.0f, node.Right.SpaceCenter.y));
-        line.startWidth = 1.5f;
-        line.endWidth= 1.5f;
+        //복도 생성
+        {
+            GameObject go = Resources.Load<GameObject>("TestLineRenderer");
+            GameObject instance = Instantiate(go);
+            LineRenderer line = instance.GetComponent<LineRenderer>();
+
+            Material newMat = new Material(Shader.Find("Unlit/Color"));
+            newMat.color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), 1.0f);
+            line.material = newMat;
+            line.SetPosition(0, new Vector3(node.Left.SpaceCenter.x, 0.0f, node.Left.SpaceCenter.y));
+            line.SetPosition(1, new Vector3(node.Right.SpaceCenter.x, 0.0f, node.Right.SpaceCenter.y));
+            line.startWidth = 1.5f;
+            line.endWidth= 1.5f;
+        }
 
         DrawCorridor(node.Left);
         DrawCorridor(node.Right);

@@ -56,13 +56,6 @@ public class BinarySpacePartitioner
                 node.SpaceWidth, dividedHeight
             );
 
-            //TODO: 게임 에셋으로 교체할 부분
-            //GameObject go = Resources.Load<GameObject>("TestLineRenderer");
-            //GameObject instance = GameObject.Instantiate(go);
-            //LineRenderer line = instance.GetComponent<LineRenderer>();
-            //line.SetPosition(0, new Vector3(node.BottomLeftAnchor.x, 0.1f, node.BottomLeftAnchor.y + dividedHeight));
-            //line.SetPosition(1, new Vector3(node.TopRightAnchor.x, 0.1f, node.BottomLeftAnchor.y + dividedHeight));
-
             RoomNode leftNode = new RoomNode(topRoomSize);
             RoomNode rightNode = new RoomNode(bottomRoomSize);
 
@@ -84,18 +77,17 @@ public class BinarySpacePartitioner
                 node.SpaceWidth - dividedWidth, node.SpaceHeight
             );
 
-            //TODO: 게임 에셋으로 교체할 부분
-            //GameObject go = Resources.Load<GameObject>("TestLineRenderer");
-            //GameObject instance = GameObject.Instantiate(go);
-            //LineRenderer line = instance.GetComponent<LineRenderer>();
-            //line.SetPosition(0, new Vector3(node.BottomLeftAnchor.x + dividedWidth, 0.1f, node.BottomLeftAnchor.y));
-            //line.SetPosition(1, new Vector3(node.BottomLeftAnchor.x + dividedWidth, 0.1f, node.TopRightAnchor.y));
-
             RoomNode leftNode = new RoomNode(leftRoomSize);
             RoomNode rightNode = new RoomNode(rightRoomSize);
 
             node.Left = leftNode;
             node.Right = rightNode;
+        }
+
+        //문 생성을 위해 말단 노드만 가진 부모노드 표시
+        if (iterations == _maxIterations - 1)
+        {
+            node.HasLeaf = true;
         }
 
         DivideSpace(node.Left, iterations + 1);
