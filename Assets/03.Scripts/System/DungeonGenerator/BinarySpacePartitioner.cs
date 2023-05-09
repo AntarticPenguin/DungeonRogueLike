@@ -34,13 +34,12 @@ public class BinarySpacePartitioner
         return _rootNode;
     }
 
-    private void DivideSpace(RoomNode node, int iterations = 0)
+    private void DivideSpace(RoomNode node, int iterations)
     {
         if (iterations == _maxIterations)
             return;
 
-        eSplitDirection splitDireciton = (node.SpaceWidth > node.SpaceHeight) ? eSplitDirection.VERTICAL : eSplitDirection.HORIZONTAL;
-
+        eSplitDirection splitDireciton = splitDireciton = (node.SpaceWidth > node.SpaceHeight) ? eSplitDirection.VERTICAL : eSplitDirection.HORIZONTAL;
         if (eSplitDirection.HORIZONTAL == splitDireciton)
         {
             //가로
@@ -56,11 +55,12 @@ public class BinarySpacePartitioner
                 node.SpaceWidth, dividedHeight
             );
 
-            RoomNode leftNode = new RoomNode(topRoomSize);
-            RoomNode rightNode = new RoomNode(bottomRoomSize);
+            RoomNode topNode = new RoomNode(topRoomSize);
+            RoomNode bottomNode = new RoomNode(bottomRoomSize);
 
-            node.Left = leftNode;
-            node.Right = rightNode;
+            node.Left = bottomNode;
+            node.Right = topNode;
+
         }
         else
         {
@@ -82,6 +82,7 @@ public class BinarySpacePartitioner
 
             node.Left = leftNode;
             node.Right = rightNode;
+
         }
 
         //문 생성을 위해 말단 노드만 가진 부모노드 표시

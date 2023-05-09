@@ -10,15 +10,14 @@ using UnityEngine;
 public class DungeonGenerator : MonoBehaviour
 {
     [Header("Dungeon Size")]
-    [SerializeField] int _mapWidth;
     [SerializeField] int _mapSize;
 
     [Header("Settings")]
     [SerializeField, Range(1, 6)]
-    int _maxIterations = 4;
+    private int _maxIterations = 4;
 
     [SerializeField, Range(0.3f, 0.7f)]
-    float _minDivideRatio = 0.45f;
+    private float _divideRatio = 0.45f;
 
     [SerializeField] int _minRoomPadding = 1;
     [SerializeField] int _maxRoomPadding = 3;
@@ -29,6 +28,10 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] GameObject _doorwayPrefab;
     [SerializeField] GameObject _backfillPrefab;
 
+    private float _minDivideRatio;
+    private float _maxDivideRatio;
+    private List<RoomNode> leafNodes = new List<RoomNode>();    //리프노드 = 실제 생성될 룸노드
+
     private void Start()
     {
         GenerateDungeon();
@@ -36,38 +39,76 @@ public class DungeonGenerator : MonoBehaviour
 
     private void GenerateDungeon()
     {
-        RectInt dungeonSize = new RectInt(0, 0, _mapWidth, _mapSize);
+        RectInt dungeonSize = new RectInt(0, 0, _mapSize, _mapSize);
+        _minDivideRatio = Mathf.Min(_divideRatio, 1 - _divideRatio);
+        _maxDivideRatio = 1 - _minDivideRatio;
 
         //BSP를 이용한 공간 분할
-        BinarySpacePartitioner bsp = new BinarySpacePartitioner(dungeonSize, _minDivideRatio, 1 - _minDivideRatio);
+        BinarySpacePartitioner bsp = new BinarySpacePartitioner(dungeonSize, _minDivideRatio, _maxDivideRatio);
         RoomNode treeNode = bsp.CreateRoomTree(_maxIterations);
 
         InitRoomInfo(treeNode);
 
         //만들어진 트리를 이용해 룸 생성
         CreateRooms();
+        ConnectRooms();
 
         //복도 생성(방 연결)
-        DrawCorridor(treeNode);
+        for (int i = 0; i < leafNodes.Count; i++)
+        {
+            DrawCorridor(leafNodes[i]);
+        }
     }
 
-
-    List<RoomNode> leafNodes = new List<RoomNode>();    //리프노드 = 실제 생성될 룸노드
-    List<RoomNode> doorNodes = new List<RoomNode>();    //룸노드 중, 방을 연결해주는 노드(복도와 복도 아님)
     private void InitRoomInfo(RoomNode treeNode)
     {
         TraverseNode(treeNode);
 
-        for(int i = 0; i < leafNodes.Count; i++)
+        for (int i = 0; i < leafNodes.Count; i++)
         {
             leafNodes[i].InitRoomSizeBySpace(_minRoomPadding, _maxRoomPadding);
+            leafNodes[i].RoomName = string.Format("{0} Node", i);
         }
 
-        for(int i = 0; i < doorNodes.Count; i++)
+        for (int i = 0; i < leafNodes.Count; i++)
         {
-            RoomNode node = doorNodes[i];
-            node.Left.CalculateDoorPosition(node.Left.SpaceCenter, node.Right.SpaceCenter);
-            node.Right.CalculateDoorPosition(node.Right.SpaceCenter, node.Left.SpaceCenter);
+            FindAndAddNeighborNode(leafNodes[i]);
+        }
+    }
+
+    private void FindAndAddNeighborNode(RoomNode node)
+    {
+        List<KeyValuePair<RoomNode, float>> distanceWithNodeList = new List<KeyValuePair<RoomNode, float>>();
+        List<RoomNode> neighborNodes = new List<RoomNode>();
+
+        float limitDistance = _mapSize * Mathf.Pow(_maxDivideRatio, _maxIterations);
+        //룸 상하좌우 위치 비교해서 가장 짧은거리가 _mapSize * Mathf.pow(_minDivi, _maxIter) 보다 작을 경우
+        Debug.Log($"limit distance: {limitDistance}");
+
+        for (int i = 0; i < leafNodes.Count; i++)
+        {
+            if (leafNodes[i] == node)
+                continue;
+
+            float distance = node.RoomSize.GetShortestDistance(leafNodes[i].RoomSize);
+            Debug.Log($"{leafNodes[i].RoomName}, {node.RoomName}'s distance: {distance}");
+
+            if (distance <= limitDistance)
+            {
+                neighborNodes.Add(leafNodes[i]);
+            }
+        }
+
+        if(neighborNodes.Count == 0)
+        {
+            Debug.LogError("이웃 노드가 없음!!");
+        }
+        else
+        {
+            foreach (RoomNode neighbor in neighborNodes)
+            {
+                node.AddNeighborNode(neighbor);
+            }
         }
     }
 
@@ -79,11 +120,13 @@ public class DungeonGenerator : MonoBehaviour
             int tileSize = 2;
             float tilePivot = 0.5f;
 
+            GameObject parentObject = new GameObject($"{leafNodes[i].RoomName}");
+
             for (int y = room.yMin; y < room.yMax; y += tileSize)
             {
                 for (int x = room.xMin; x < room.xMax; x += tileSize)
                 {
-                    GameObject instance = Instantiate(_tilePrefab);
+                    GameObject instance = Instantiate(_tilePrefab, parentObject.transform);
                     instance.transform.position = new Vector3(x + tilePivot, 0, y + tilePivot);
                     instance.transform.localScale = Vector3.one;
                 }
@@ -91,6 +134,49 @@ public class DungeonGenerator : MonoBehaviour
 
             CreateWalls(leafNodes[i]);
         }
+    }
+
+    private void ConnectRooms()
+    {
+        for (int i = 0; i < leafNodes.Count; i++)
+        {
+            var neighborNodes = leafNodes[i].NeighborNodes;
+
+            for (int j = 0; j < neighborNodes.Count; j++)
+            {
+                leafNodes[i].ConnectRoom(neighborNodes[j]);
+            }
+        }
+    }
+
+    private bool CheckDoorPosition(RoomNode node, int wallXPos, int wallZPos, bool isHorizontal)
+    {
+        for(int i = 0; i < node.DoorInfos.Count; i++)
+        {
+            Vector3 doorPos = node.DoorInfos[i]._doorPosition;
+
+            int doorXMin = Mathf.CeilToInt(doorPos.x - 3);
+            int doorXMax = Mathf.FloorToInt(doorPos.x + 3);
+            int doorZMin = Mathf.CeilToInt(doorPos.z - 3);
+            int doorZMax = Mathf.FloorToInt(doorPos.z + 3);
+            
+            if(isHorizontal)
+            {
+                if ((doorXMin < wallXPos && wallXPos < doorXMax) && ((int)doorPos.z == wallZPos))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if ((doorZMin < wallZPos && wallZPos < doorZMax) && ((int)doorPos.x == wallXPos))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private void CreateWalls(RoomNode roomNode)
@@ -102,10 +188,6 @@ public class DungeonGenerator : MonoBehaviour
 
         int xPos = 0;
         int zPos = 0;
-        int doorXMin = Mathf.CeilToInt(roomNode.DoorPosition.x - 3);
-        int doorXMax = Mathf.FloorToInt(roomNode.DoorPosition.x + 3);
-        int doorZMin = Mathf.CeilToInt(roomNode.DoorPosition.z - 3);
-        int doorZMax = Mathf.FloorToInt(roomNode.DoorPosition.z + 3);
 
         //Top edge
         for (int i = 0; i <= width; i++)
@@ -113,13 +195,13 @@ public class DungeonGenerator : MonoBehaviour
             xPos = size.xMin + i * wallWidth;
             zPos = size.yMax;
 
-            if((doorXMin < xPos && xPos < doorXMax) && ((int)roomNode.DoorPosition.z == zPos))
+            if (CheckDoorPosition(roomNode, xPos, zPos, true))
             {
                 continue;
             }
 
             GameObject instance = Instantiate(_wallPrefab);
-            instance.transform.position = new Vector3(xPos, 0, size.yMax);
+            instance.transform.position = new Vector3(xPos, 0, zPos);
             instance.transform.eulerAngles = new Vector3(0, -180, 0);
             instance.transform.localScale = Vector3.one;
         }
@@ -130,7 +212,7 @@ public class DungeonGenerator : MonoBehaviour
             xPos = size.xMin + i * wallWidth;
             zPos = size.yMin;
 
-            if ((doorXMin < xPos && xPos < doorXMax) && ((int)roomNode.DoorPosition.z == zPos))
+            if (CheckDoorPosition(roomNode, xPos, zPos, true))
             {
                 continue;
             }
@@ -146,7 +228,7 @@ public class DungeonGenerator : MonoBehaviour
             xPos = size.xMin;
             zPos = size.yMin + i * wallWidth;
 
-            if ((doorZMin < zPos && zPos < doorZMax) && ((int)roomNode.DoorPosition.x == xPos))
+            if (CheckDoorPosition(roomNode, xPos, zPos, false))
             {
                 continue;
             }
@@ -163,7 +245,7 @@ public class DungeonGenerator : MonoBehaviour
             xPos = size.xMax;
             zPos = size.yMin + i * wallWidth;
 
-            if ((doorZMin < zPos && zPos < doorZMax) && ((int)roomNode.DoorPosition.x == xPos))
+            if (CheckDoorPosition(roomNode, xPos, zPos, false))
             {
                 continue;
             }
@@ -186,56 +268,22 @@ public class DungeonGenerator : MonoBehaviour
         {
             leafNodes.Add(node);
         }
-
-        if(node.HasLeaf)
-        {
-            doorNodes.Add(node);
-        }
             
         TraverseNode(node.Right);
     }
 
     private void DrawCorridor(RoomNode node)
     {
-        if(node.IsLeaf)
-        {
-            return;
-        }
-
         //복도 문 생성
-        if (node.HasLeaf)
+        for(int i = 0; i < node.DoorInfos.Count; i++)
         {
-            {
-                GameObject instance = Instantiate(_doorwayPrefab);
-                instance.transform.position = node.Left.DoorPosition;
-                instance.transform.rotation = node.Left.DoorRotation;
-                instance.transform.localScale = Vector3.one;
-            }
-            {
-                GameObject instance = Instantiate(_doorwayPrefab);
-                instance.transform.position = node.Right.DoorPosition;
-                instance.transform.rotation = node.Right.DoorRotation;
-                instance.transform.localScale = Vector3.one;
-            }
+            GameObject instance = Instantiate(_doorwayPrefab);
+            instance.gameObject.name = node.DoorInfos[i]._name;
+            instance.transform.position = node.DoorInfos[i]._doorPosition;
+            instance.transform.rotation = node.DoorInfos[i]._doorRotation;
+            instance.transform.localScale = Vector3.one;
         }
-
+        
         //TODO: 게임 에셋으로 교체할 부분
-        //복도 생성
-        {
-            GameObject go = Resources.Load<GameObject>("TestLineRenderer");
-            GameObject instance = Instantiate(go);
-            LineRenderer line = instance.GetComponent<LineRenderer>();
-
-            Material newMat = new Material(Shader.Find("Unlit/Color"));
-            newMat.color = new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), 1.0f);
-            line.material = newMat;
-            line.SetPosition(0, new Vector3(node.Left.SpaceCenter.x, 0.0f, node.Left.SpaceCenter.y));
-            line.SetPosition(1, new Vector3(node.Right.SpaceCenter.x, 0.0f, node.Right.SpaceCenter.y));
-            line.startWidth = 1.5f;
-            line.endWidth= 1.5f;
-        }
-
-        DrawCorridor(node.Left);
-        DrawCorridor(node.Right);
     }
 }
