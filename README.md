@@ -5,23 +5,23 @@
 
 # 작업일지
 1. BSP 공간분할
-<img src="/uploadForReadme/BSP_1.png">
+<img src="/uploadForReadme/BSP_1.png" width=70%>
 
 2. BSP 룸 할당
-<img src="/uploadForReadme/BPS_2.png">
+<img src="/uploadForReadme/BPS_2.png" width=70%>
 
 3. 복도 생성 가시화
-<img src="/uploadForReadme/BSP Corridor_1.png">
-<img src="/uploadForReadme/BSP Corridor_2.png">
+<img src="/uploadForReadme/BSP Corridor_1.png" width=70%>
+<img src="/uploadForReadme/BSP Corridor_2.png" width=70%>
 
-4. 문 배치
-<img src="/uploadForReadme/Batch_Door_1.png">
+4. 문 배치  
+<img src="/uploadForReadme/Batch_Door_1.png">  
 
-4-1. 문 배치 개선
+4-1. 문 배치 개선  
 <img src="/uploadForReadme/Batch_Door_2.png">  
-방 안쪽에서만 문 배치
+방 안쪽에서만 문 배치  
 
-4-2. 벽에 문 배치 및 배치구역에 벽 제거
+4-2. 벽에 문 배치 및 배치구역에 벽 제거  
 <img src="/uploadForReadme/Wall with door_1.png">  
 <img src="/uploadForReadme/Wall with door_2.png">  
 
