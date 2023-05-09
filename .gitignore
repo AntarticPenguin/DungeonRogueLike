@@ -58,6 +58,9 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Unity layout files
+*.dwlt
+
 # Ignore paid resources
 /[Aa]ssets/04.Download Resources/**/*.fbx
 /[Aa]ssets/04.Download Resources/**/*.tga
