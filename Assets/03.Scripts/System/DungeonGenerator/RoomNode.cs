@@ -145,15 +145,15 @@ public class RoomNode
                 fromDoor._doorRotation = Quaternion.Euler(0f, 180f, 0f);
                 toDoor._doorRotation = Quaternion.identity;
             }
+
+            _connectedNodes.Add(toNode);
+            toNode.ConnectedNodes.Add(this);
+
+            fromDoor._name = string.Format("{0}->{1}", RoomName, toNode.RoomName);
+            toDoor._name = string.Format("{0}->{1}", toNode.RoomName, RoomName);
+            _doorInfos.Add(fromDoor);
+            toNode.DoorInfos.Add(toDoor);
         }
-
-        _connectedNodes.Add(toNode);
-        toNode.ConnectedNodes.Add(this);
-
-        fromDoor._name = string.Format("{0}->{1}", RoomName, toNode.RoomName);
-        toDoor._name = string.Format("{0}->{1}", toNode.RoomName, RoomName);
-        _doorInfos.Add(fromDoor);
-        toNode.DoorInfos.Add(toDoor);
     }
 
     public void AddNeighborNode(RoomNode node)
