@@ -51,7 +51,6 @@ public class DungeonGenerator : MonoBehaviour
 
         //만들어진 트리를 이용해 룸 생성
         CreateRooms();
-        ConnectRooms();
 
         //복도 생성(방 연결)
         for (int i = 0; i < leafNodes.Count; i++)
@@ -74,11 +73,12 @@ public class DungeonGenerator : MonoBehaviour
         {
             FindAndAddNeighborNode(leafNodes[i]);
         }
+
+        ConnectRooms();
     }
 
     private void FindAndAddNeighborNode(RoomNode node)
     {
-        List<KeyValuePair<RoomNode, float>> distanceWithNodeList = new List<KeyValuePair<RoomNode, float>>();
         List<RoomNode> neighborNodes = new List<RoomNode>();
 
         //룸 상하좌우 위치 비교해서 가장 짧은거리가 _mapSize * Mathf.pow(_minDivi, _maxIter) 보다 작을 경우

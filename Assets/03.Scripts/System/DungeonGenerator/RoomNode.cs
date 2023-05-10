@@ -153,7 +153,7 @@ public class RoomNode
         fromDoor._name = string.Format("{0}->{1}", RoomName, toNode.RoomName);
         toDoor._name = string.Format("{0}->{1}", toNode.RoomName, RoomName);
         _doorInfos.Add(fromDoor);
-        _doorInfos.Add(toDoor);
+        toNode.DoorInfos.Add(toDoor);
     }
 
     public void AddNeighborNode(RoomNode node)
