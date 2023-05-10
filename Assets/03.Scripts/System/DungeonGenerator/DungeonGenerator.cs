@@ -81,8 +81,8 @@ public class DungeonGenerator : MonoBehaviour
         List<KeyValuePair<RoomNode, float>> distanceWithNodeList = new List<KeyValuePair<RoomNode, float>>();
         List<RoomNode> neighborNodes = new List<RoomNode>();
 
-        float limitDistance = _mapSize * Mathf.Pow(_maxDivideRatio, _maxIterations);
         //룸 상하좌우 위치 비교해서 가장 짧은거리가 _mapSize * Mathf.pow(_minDivi, _maxIter) 보다 작을 경우
+        float limitDistance = _mapSize * Mathf.Pow(_maxDivideRatio, _maxIterations);
         Debug.Log($"limit distance: {limitDistance}");
 
         for (int i = 0; i < leafNodes.Count; i++)
@@ -132,7 +132,7 @@ public class DungeonGenerator : MonoBehaviour
                 }
             }
 
-            CreateWalls(leafNodes[i]);
+            CreatRoomEdge(leafNodes[i]);
         }
     }
 
@@ -179,9 +179,9 @@ public class DungeonGenerator : MonoBehaviour
         return false;
     }
 
-    private void CreateWalls(RoomNode roomNode)
+    private void CreatRoomEdge(RoomNode roomNode)
     {
-        int wallWidth = 1;
+        int wallSize = 1;
         RectInt size = roomNode.RoomSize;
         int width = size.width;
         int height = size.height;
@@ -190,71 +190,60 @@ public class DungeonGenerator : MonoBehaviour
         int zPos = 0;
 
         //Top edge
-        for (int i = 0; i <= width; i++)
+        for (int i = 0; i < width + 1; i++)
         {
-            xPos = size.xMin + i * wallWidth;
+            xPos = size.xMin + i * wallSize;
             zPos = size.yMax;
 
-            if (CheckDoorPosition(roomNode, xPos, zPos, true))
+            if (!CheckDoorPosition(roomNode, xPos, zPos, isHorizontal: true))
             {
-                continue;
+                CreatWall(xPos, zPos, -180f);
             }
-
-            GameObject instance = Instantiate(_wallPrefab);
-            instance.transform.position = new Vector3(xPos, 0, zPos);
-            instance.transform.eulerAngles = new Vector3(0, -180, 0);
-            instance.transform.localScale = Vector3.one;
         }
 
         //Bottom edge
-        for (int i = 0; i <= width; i++)
+        for (int i = 0; i < width + 1; i++)
         {
-            xPos = size.xMin + i * wallWidth;
+            xPos = size.xMin + i * wallSize;
             zPos = size.yMin;
 
-            if (CheckDoorPosition(roomNode, xPos, zPos, true))
+            if (!CheckDoorPosition(roomNode, xPos, zPos, isHorizontal: true))
             {
-                continue;
+                CreatWall(xPos, zPos, 0f);
             }
-
-            GameObject instance = Instantiate(_wallPrefab);
-            instance.transform.position = new Vector3(xPos, 0, zPos);
-            instance.transform.localScale = Vector3.one;
         }
 
         //Left side edge
-        for (int i = height - 1; i > 0; i--)
+        for (int i = 0; i < height - 1; i++)
         {
             xPos = size.xMin;
-            zPos = size.yMin + i * wallWidth;
+            zPos = size.yMin + (i+1) * wallSize;
 
-            if (CheckDoorPosition(roomNode, xPos, zPos, false))
+            if (!CheckDoorPosition(roomNode, xPos, zPos, isHorizontal: false))
             {
-                continue;
+                CreatWall(xPos, zPos, 90f);
             }
-
-            GameObject instance = Instantiate(_wallPrefab);
-            instance.transform.position = new Vector3(xPos, 0, zPos);
-            instance.transform.eulerAngles = new Vector3(0, 90, 0);
-            instance.transform.localScale = Vector3.one;
         }
 
         //Right side edge
-        for (int i = height - 1; i > 0; i--)
+        for (int i = 0; i < height - 1; i++)
         {
             xPos = size.xMax;
-            zPos = size.yMin + i * wallWidth;
+            zPos = size.yMin + (i+1) * wallSize;
 
-            if (CheckDoorPosition(roomNode, xPos, zPos, false))
+            if (!CheckDoorPosition(roomNode, xPos, zPos, isHorizontal: false))
             {
-                continue;
+                CreatWall(xPos, zPos, -90f);
             }
-
-            GameObject instance = Instantiate(_wallPrefab);
-            instance.transform.position = new Vector3(xPos, 0, zPos);
-            instance.transform.eulerAngles = new Vector3(0, -90, 0);
-            instance.transform.localScale = Vector3.one;
         }
+    }
+
+    private void CreatWall(int xPos, int zPos, float angle)
+    {
+        GameObject instance = Instantiate(_wallPrefab);
+        instance.transform.position = new Vector3(xPos, 0, zPos);
+        instance.transform.eulerAngles = new Vector3(0, angle, 0);
+        instance.transform.localScale = Vector3.one;
     }
 
     private void TraverseNode(RoomNode node)
