@@ -33,6 +33,8 @@ public class DungeonGenerator : MonoBehaviour
     private float _maxDivideRatio;
     private List<RoomNode> _leafNodes = new List<RoomNode>();    //리프노드 = 실제 생성될 룸노드
 
+    private readonly int _DOOR_LENGTH = 6;
+
     private void Start()
     {
         GenerateDungeon();
@@ -93,7 +95,7 @@ public class DungeonGenerator : MonoBehaviour
             float distance = node.RoomSize.GetShortestDistance(_leafNodes[i].RoomSize);
             Debug.Log($"limit distance: {limitDistance}, {_leafNodes[i].RoomName} - {node.RoomName}'s distance: {distance}");
 
-            if (distance <= limitDistance)
+            if (distance <= limitDistance && node.RoomSize.CheckOverlapRange(_leafNodes[i].RoomSize, _DOOR_LENGTH))
             {
                 neighborNodes.Add(_leafNodes[i]);
             }

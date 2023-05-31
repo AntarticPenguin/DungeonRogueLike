@@ -98,68 +98,58 @@ public class RoomNode
         int doorYMin = Mathf.Max(from.yMin, to.yMin);
         int doorYMax = Mathf.Min(from.yMax, to.yMax);
 
-        //연결가능 유효성 체크. 너비, 높이 둘 중 하나만 참이면 됨
-        int xMin = Mathf.Min(from.xMin, to.xMin);
-        int xMax = Mathf.Max(from.xMax, to.xMax);
-        int yMin = Mathf.Min(from.yMin, to.yMin);
-        int yMax = Mathf.Max(from.yMax, to.yMax);
-
-        bool isOverlapped = from.CheckOverlapRange(to);
-        if (isOverlapped)
+        eRelativeRectDirection relativeDirection = from.DistinguishRectPosition(to);
+        if (eRelativeRectDirection.LEFT == relativeDirection)
         {
-            eRelativeRectDirection relativeDirection = from.DistinguishRectPosition(to);
-            if (eRelativeRectDirection.LEFT == relativeDirection)
-            {
-                //to가 왼쪽 방에 있을 때
-                int yPos = UnityEngine.Random.Range(doorYMin + 3, doorYMax - 3);
-                fromDoor._doorPosition = new Vector3(from.xMin, 0, yPos);
-                toDoor._doorPosition = new Vector3(to.xMax, 0, yPos);
+            //to가 왼쪽 방에 있을 때
+            int yPos = UnityEngine.Random.Range(doorYMin + 3, doorYMax - 3);
+            fromDoor._doorPosition = new Vector3(from.xMin, 0, yPos);
+            toDoor._doorPosition = new Vector3(to.xMax, 0, yPos);
 
-                fromDoor._doorRotation = Quaternion.Euler(0f, 90f, 0f);
-                toDoor._doorRotation = Quaternion.Euler(0f, -90f, 0f);
-            }
-            else if(eRelativeRectDirection.RIGHT == relativeDirection)
-            {
-                //to가 오른쪽 방
-                int yPos = UnityEngine.Random.Range(doorYMin + 3, doorYMax - 3);
-                fromDoor._doorPosition = new Vector3(from.xMax, 0, yPos);
-                toDoor._doorPosition = new Vector3(to.xMin, 0, yPos);
-
-                fromDoor._doorRotation = Quaternion.Euler(0f, -90f, 0f);
-                toDoor._doorRotation = Quaternion.Euler(0f, 90f, 0f);
-            }
-            else if(eRelativeRectDirection.DOWN == relativeDirection)
-            {
-                //to가 아래쪽
-                int xPos = UnityEngine.Random.Range(doorXMin + 3, doorXMax - 3);
-                fromDoor._doorPosition = new Vector3(xPos, 0, from.yMin);
-                toDoor._doorPosition = new Vector3(xPos, 0, to.yMax);
-
-                fromDoor._doorRotation = Quaternion.identity;
-                toDoor._doorRotation = Quaternion.Euler(0f, 180f, 0f);
-            }
-            else if(eRelativeRectDirection.UP == relativeDirection)
-            {
-                //위
-                int xPos = UnityEngine.Random.Range(doorXMin + 3, doorXMax - 3);
-                fromDoor._doorPosition = new Vector3(xPos, 0 , from.yMax);
-                toDoor._doorPosition = new Vector3(xPos, 0, to.yMin);
-
-                fromDoor._doorRotation = Quaternion.Euler(0f, 180f, 0f);
-                toDoor._doorRotation = Quaternion.identity;
-            }
-
-            _connectedNodes.Add(toNode);
-            toNode.ConnectedNodes.Add(this);
-
-            fromDoor._name = string.Format("{0}->{1}", RoomName, toNode.RoomName);
-            fromDoor._corridorLength = (int)Vector3.Distance(fromDoor._doorPosition, toDoor._doorPosition) - 1;
-            fromDoor._hasCorridor = true;
-            fromDoor._doorDirection = relativeDirection;
-
-            toDoor._name = string.Format("{0}->{1}", toNode.RoomName, RoomName);
-            _doorInfos.Add(fromDoor);
-            toNode.DoorInfos.Add(toDoor);
+            fromDoor._doorRotation = Quaternion.Euler(0f, 90f, 0f);
+            toDoor._doorRotation = Quaternion.Euler(0f, -90f, 0f);
         }
+        else if (eRelativeRectDirection.RIGHT == relativeDirection)
+        {
+            //to가 오른쪽 방
+            int yPos = UnityEngine.Random.Range(doorYMin + 3, doorYMax - 3);
+            fromDoor._doorPosition = new Vector3(from.xMax, 0, yPos);
+            toDoor._doorPosition = new Vector3(to.xMin, 0, yPos);
+
+            fromDoor._doorRotation = Quaternion.Euler(0f, -90f, 0f);
+            toDoor._doorRotation = Quaternion.Euler(0f, 90f, 0f);
+        }
+        else if (eRelativeRectDirection.DOWN == relativeDirection)
+        {
+            //to가 아래쪽
+            int xPos = UnityEngine.Random.Range(doorXMin + 3, doorXMax - 3);
+            fromDoor._doorPosition = new Vector3(xPos, 0, from.yMin);
+            toDoor._doorPosition = new Vector3(xPos, 0, to.yMax);
+
+            fromDoor._doorRotation = Quaternion.identity;
+            toDoor._doorRotation = Quaternion.Euler(0f, 180f, 0f);
+        }
+        else if (eRelativeRectDirection.UP == relativeDirection)
+        {
+            //위
+            int xPos = UnityEngine.Random.Range(doorXMin + 3, doorXMax - 3);
+            fromDoor._doorPosition = new Vector3(xPos, 0, from.yMax);
+            toDoor._doorPosition = new Vector3(xPos, 0, to.yMin);
+
+            fromDoor._doorRotation = Quaternion.Euler(0f, 180f, 0f);
+            toDoor._doorRotation = Quaternion.identity;
+        }
+
+        _connectedNodes.Add(toNode);
+        toNode.ConnectedNodes.Add(this);
+
+        fromDoor._name = string.Format("{0}->{1}", RoomName, toNode.RoomName);
+        fromDoor._corridorLength = (int)Vector3.Distance(fromDoor._doorPosition, toDoor._doorPosition) - 1;
+        fromDoor._hasCorridor = true;
+        fromDoor._doorDirection = relativeDirection;
+
+        toDoor._name = string.Format("{0}->{1}", toNode.RoomName, RoomName);
+        _doorInfos.Add(fromDoor);
+        toNode.DoorInfos.Add(toDoor);
     }
 }

@@ -39,3 +39,7 @@
 <img src="/uploadForReadme/Adjacent Room.png">  
 인접한 방은 상하좌우에 있는 방들 중 가장 가까운 방을 선택.  
 연결가능한 방은 두 방의 가로, 세로를 일직선상에 놓는다고 가정했을 때, 겹치는 구간이 있다면 연결 가능
+
+6. 방 연결테스트 및 버그 픽스  
+<img src="/uploadForReadme/DrawCorridor.png">  
+문 길이보다 부족하게 겹치는 방들은 문 생성을 하지 않게 수정
