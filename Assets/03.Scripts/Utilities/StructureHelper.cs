@@ -62,4 +62,14 @@ public static class StructureHelper
                 }
         }
     }
+
+    public static bool CheckOverlapRange(this RectInt from, RectInt to)
+    {
+        int xMin = Mathf.Min(from.xMin, to.xMin);
+        int xMax = Mathf.Max(from.xMax, to.xMax);
+        int yMin = Mathf.Min(from.yMin, to.yMin);
+        int yMax = Mathf.Max(from.yMax, to.yMax);
+
+        return (xMax - xMin < from.width + to.width) || (yMax - yMin < from.height + to.height);
+    }
 }

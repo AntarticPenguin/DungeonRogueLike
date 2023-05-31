@@ -3,6 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class DoorInfo
+{
+    public Vector3 _doorPosition;
+    public Quaternion _doorRotation;
+    public string _name;
+    public int _corridorLength;
+    public bool _hasCorridor;       //from -> to 에서 from 문에만 복도를 그린다.
+    public eRelativeRectDirection _doorDirection;
+}
+
 public class RoomNode
 {
     private RoomNode _left;
@@ -13,7 +23,7 @@ public class RoomNode
 
     private int _layerIndex;
 
-    private List<RoomNode> _neighborNodes;
+    private List<RoomNode> _neighborNodes = new List<RoomNode>();
     private List<RoomNode> _connectedNodes = new List<RoomNode>();
     private List<DoorInfo> _doorInfos = new List<DoorInfo>();
 
@@ -43,13 +53,6 @@ public class RoomNode
     public List<RoomNode> ConnectedNodes => _connectedNodes;
 
     public List<DoorInfo> DoorInfos => _doorInfos;
-
-    public struct DoorInfo
-    {
-        public Vector3 _doorPosition;
-        public Quaternion _doorRotation;
-        public string _name;
-    }
 
     public RoomNode(RectInt size)
     {
@@ -101,7 +104,7 @@ public class RoomNode
         int yMin = Mathf.Min(from.yMin, to.yMin);
         int yMax = Mathf.Max(from.yMax, to.yMax);
 
-        bool isOverlapped = CheckOverlapRange(xMin, xMax, from.width, to.width) || CheckOverlapRange(yMin, yMax, from.height, to.height);
+        bool isOverlapped = from.CheckOverlapRange(to);
         if (isOverlapped)
         {
             eRelativeRectDirection relativeDirection = from.DistinguishRectPosition(to);
@@ -150,24 +153,13 @@ public class RoomNode
             toNode.ConnectedNodes.Add(this);
 
             fromDoor._name = string.Format("{0}->{1}", RoomName, toNode.RoomName);
+            fromDoor._corridorLength = (int)Vector3.Distance(fromDoor._doorPosition, toDoor._doorPosition) - 1;
+            fromDoor._hasCorridor = true;
+            fromDoor._doorDirection = relativeDirection;
+
             toDoor._name = string.Format("{0}->{1}", toNode.RoomName, RoomName);
             _doorInfos.Add(fromDoor);
             toNode.DoorInfos.Add(toDoor);
         }
-    }
-
-    public void AddNeighborNode(RoomNode node)
-    {
-        if(null == _neighborNodes)
-        {
-            _neighborNodes = new List<RoomNode>();
-        }
-
-        _neighborNodes.Add(node);
-    }
-
-    private bool CheckOverlapRange(int min, int max, int width1, int width2)
-    {
-        return (max - min < width1 + width2);
     }
 }
