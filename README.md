@@ -44,3 +44,6 @@
 <img src="/uploadForReadme/DrawCorridor.png">  
 문 길이보다 부족하게 겹치는 방들은 문 생성을 하지 않게 수정
 <br/><br/>
+7. 고립된 방 버그 픽스
+<img src="/uploadForReadme/DrawCorridor_bug1.png">  
+<img src="/uploadForReadme/DrawCorridor_bugFixed.png">  

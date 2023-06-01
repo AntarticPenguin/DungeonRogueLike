@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 /// <summary>
@@ -80,38 +81,79 @@ public class DungeonGenerator : MonoBehaviour
         ConnectRooms();
     }
 
-    private void FindAndAddNeighborNode(RoomNode node)
+    private void FindAndAddNeighborNode(RoomNode curNode)
     {
-        List<RoomNode> neighborNodes = new List<RoomNode>();
-
-        //룸 상하좌우 위치 비교해서 가장 짧은거리가 _mapSize * Mathf.pow(_minDivi, _maxIter) 보다 작을 경우
-        float limitDistance = _mapSize * Mathf.Pow(_maxDivideRatio, _maxIterations);
-
-        for (int i = 0; i < _leafNodes.Count; i++)
+        var nodesByDirection = new List<Tuple<RoomNode, float>>[4];      //상하좌우
+        for(int i = 0; i < 4; i++)
         {
-            if (_leafNodes[i] == node)
+            nodesByDirection[i] = new List<Tuple<RoomNode, float>>();
+        }
+
+        RectInt from = curNode.RoomSize;
+
+        foreach (RoomNode node in _leafNodes)
+        {
+            if(curNode == node)
+            {
                 continue;
+            }
 
-            float distance = node.RoomSize.GetShortestDistance(_leafNodes[i].RoomSize);
-            Debug.Log($"limit distance: {limitDistance}, {_leafNodes[i].RoomName} - {node.RoomName}'s distance: {distance}");
-
-            if (distance <= limitDistance && node.RoomSize.CheckOverlapRange(_leafNodes[i].RoomSize, _DOOR_LENGTH))
+            RectInt to = node.RoomSize;
+            eRelativeRectDirection relativeDirection = to.DistinguishRectPosition(from);
+            switch (relativeDirection)
             {
-                neighborNodes.Add(_leafNodes[i]);
+                case eRelativeRectDirection.LEFT:
+                    nodesByDirection[0].Add(new Tuple<RoomNode, float>(node, Mathf.Abs(to.xMax - from.xMin)));
+                    break;
+                case eRelativeRectDirection.RIGHT:
+                    nodesByDirection[1].Add(new Tuple<RoomNode, float>(node, Mathf.Abs(to.xMin - from.xMax)));
+                    break;
+                case eRelativeRectDirection.DOWN:
+                    nodesByDirection[2].Add(new Tuple<RoomNode, float>(node, Mathf.Abs(to.yMax - from.yMin)));
+                    break;
+                case eRelativeRectDirection.UP:
+                    nodesByDirection[3].Add(new Tuple<RoomNode, float>(node, Mathf.Abs(to.yMin - from.yMax)));
+                    break;
+                case eRelativeRectDirection.NONE:
+                default:
+                    break;
             }
         }
 
-        if(neighborNodes.Count == 0)
+        foreach(List<Tuple<RoomNode, float>> neighborNodes in nodesByDirection)
         {
-            Debug.LogError("이웃 노드가 없음!!");
-        }
-        else
-        {
-            foreach (RoomNode neighbor in neighborNodes)
+            neighborNodes.Sort((lhs, rhs)=>
             {
-                node.NeighborNodes.Add(neighbor);
+                return lhs.Item2.CompareTo(rhs.Item2);
+            });
+
+            if (0 != neighborNodes.Count && CanMakeDoor(from, neighborNodes[0].Item1.RoomSize, _DOOR_LENGTH))
+            {
+                curNode.NeighborNodes.Add(neighborNodes[0].Item1);
             }
         }
+    }
+
+    private bool CanMakeDoor(RectInt from, RectInt to, int doorLength)
+    {
+        int doorXMin = Mathf.Max(from.xMin, to.xMin);
+        int doorXMax = Mathf.Min(from.xMax, to.xMax);
+        int doorYMin = Mathf.Max(from.yMin, to.yMin);
+        int doorYMax = Mathf.Min(from.yMax, to.yMax);
+
+        bool canMakeDoor = false;
+
+        eRelativeRectDirection relative = from.DistinguishRectPosition(to);
+        if (eRelativeRectDirection.LEFT == relative || eRelativeRectDirection.RIGHT == relative)
+        {
+            canMakeDoor = Mathf.Abs(doorYMax - doorYMin) >= doorLength;
+        }
+        else if (eRelativeRectDirection.UP == relative || eRelativeRectDirection.DOWN == relative)
+        {
+            canMakeDoor = Mathf.Abs(doorXMax - doorXMin) >= doorLength;
+        }
+
+        return canMakeDoor;
     }
 
     private void ConnectRooms()

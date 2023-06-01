@@ -98,7 +98,7 @@ public class RoomNode
         int doorYMin = Mathf.Max(from.yMin, to.yMin);
         int doorYMax = Mathf.Min(from.yMax, to.yMax);
 
-        eRelativeRectDirection relativeDirection = from.DistinguishRectPosition(to);
+        eRelativeRectDirection relativeDirection = to.DistinguishRectPosition(from);
         if (eRelativeRectDirection.LEFT == relativeDirection)
         {
             //to가 왼쪽 방에 있을 때
