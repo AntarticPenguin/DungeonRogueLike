@@ -158,13 +158,31 @@ public class DungeonGenerator : MonoBehaviour
 
     private void MakePathInfo()
     {
-        for (int i = 0; i < _leafNodes.Count; i++)
-        {
-            var neighborNodes = _leafNodes[i].NeighborNodes;
+        Queue<RoomNode> traverseQueue = new Queue<RoomNode>();
+        int randomStartIndex = UnityEngine.Random.Range(0, _leafNodes.Count - 1);
+        traverseQueue.Enqueue(_leafNodes[randomStartIndex]);
+        int revisit = 0;
 
-            for (int j = 0; j < neighborNodes.Count; j++)
+        while (0 != traverseQueue.Count)
+        {
+            RoomNode curNode = traverseQueue.Dequeue();
+
+            foreach (RoomNode neighborNode in curNode.NeighborNodes)
             {
-                _leafNodes[i].MakePathInfo(neighborNodes[j]);
+                if (!neighborNode.Visited)
+                {
+                    traverseQueue.Enqueue(neighborNode);
+                    curNode.MakePathInfo(neighborNode);
+                    neighborNode.Visited = true;
+                }
+                else
+                {
+                    if (((float)revisit / _leafNodes.Count < 0.25f) && UnityEngine.Random.value > 0.7f)
+                    {
+                        curNode.MakePathInfo(neighborNode);
+                        revisit++;
+                    }
+                }
             }
         }
     }
