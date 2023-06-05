@@ -24,17 +24,14 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] int _maxRoomPadding = 3;
 
     [SerializeField, Range(0.0f, 1.0f)]
-    private float _revisitNodeRatio = 0.25f;
+    private float _revisitNodeRatio = 0.25f;    //재방문 가능한 노드의 비율(재방문 노드수가 꽉차면 더 재방문 하지 않음)
 
     [SerializeField, Range(0.0f, 1.0f)]
-    private float _revisitPercentage = 0.3f;
+    private float _revisitPercentage = 0.3f;    //재방문 확률
 
     [Header("Assets")]
-    [SerializeField] GameObject _tilePrefab;
-    [SerializeField] GameObject _wallPrefab;
-    [SerializeField] GameObject _doorwayPrefab;
+    [SerializeField] GameObject _roomPrefab;
     [SerializeField] GameObject _backfillPrefab;
-    [SerializeField] GameObject _corridor1mPrefab;
 
     private float _minDivideRatio;
     private float _maxDivideRatio;
@@ -60,13 +57,7 @@ public class DungeonGenerator : MonoBehaviour
         InitRoomInfo(treeNode);
 
         //만들어진 트리를 이용해 룸 생성
-        CreateRooms();
-
-        //복도 생성(방 연결)
-        for (int i = 0; i < _leafNodes.Count; i++)
-        {
-            MakePath(_leafNodes[i]);
-        }
+        GenerateRooms();
     }
 
     private void InitRoomInfo(RoomNode treeNode)
@@ -193,125 +184,17 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    private void CreateRooms()
+    private void GenerateRooms()
     {
-        for (int i = 0; i < _leafNodes.Count; i++)
+        foreach(RoomNode roomNode in _leafNodes)
         {
-            RectInt room = _leafNodes[i].RoomSize;
-            int tileSize = 2;
-            float tilePivot = 0.5f;
+            GameObject instance = Instantiate(_roomPrefab);
+            instance.transform.localRotation = Quaternion.identity;
+            instance.transform.localScale = Vector3.one;
 
-            GameObject parentObject = new GameObject($"{_leafNodes[i].RoomName}");
-
-            for (int y = room.yMin; y < room.yMax; y += tileSize)
-            {
-                for (int x = room.xMin; x < room.xMax; x += tileSize)
-                {
-                    GameObject instance = Instantiate(_tilePrefab, parentObject.transform);
-                    instance.transform.position = new Vector3(x + tilePivot, 0, y + tilePivot);
-                    instance.transform.localScale = Vector3.one;
-                }
-            }
-
-            CreatRoomEdge(_leafNodes[i], parentObject);
+            Room room = instance.GetComponent<Room>();
+            room.CreateRoom(roomNode);
         }
-    }
-
-    private void CreatRoomEdge(RoomNode roomNode, GameObject parentObject)
-    {
-        int wallSize = 1;
-        RectInt size = roomNode.RoomSize;
-        int width = size.width;
-        int height = size.height;
-
-        int xPos = 0;
-        int zPos = 0;
-
-        //Top edge
-        for (int i = 0; i < width + 1; i++)
-        {
-            xPos = size.xMin + i * wallSize;
-            zPos = size.yMax;
-
-            if (!CheckDoorPosition(roomNode, xPos, zPos, isHorizontal: true))
-            {
-                CreatWall(xPos, zPos, -180f, parentObject);
-            }
-        }
-
-        //Bottom edge
-        for (int i = 0; i < width + 1; i++)
-        {
-            xPos = size.xMin + i * wallSize;
-            zPos = size.yMin;
-
-            if (!CheckDoorPosition(roomNode, xPos, zPos, isHorizontal: true))
-            {
-                CreatWall(xPos, zPos, 0f, parentObject);
-            }
-        }
-
-        //Left side edge
-        for (int i = 0; i < height - 1; i++)
-        {
-            xPos = size.xMin;
-            zPos = size.yMin + (i+1) * wallSize;
-
-            if (!CheckDoorPosition(roomNode, xPos, zPos, isHorizontal: false))
-            {
-                CreatWall(xPos, zPos, 90f, parentObject);
-            }
-        }
-
-        //Right side edge
-        for (int i = 0; i < height - 1; i++)
-        {
-            xPos = size.xMax;
-            zPos = size.yMin + (i+1) * wallSize;
-
-            if (!CheckDoorPosition(roomNode, xPos, zPos, isHorizontal: false))
-            {
-                CreatWall(xPos, zPos, -90f, parentObject);
-            }
-        }
-    }
-
-    private bool CheckDoorPosition(RoomNode node, int wallXPos, int wallZPos, bool isHorizontal)
-    {
-        for (int i = 0; i < node.DoorInfos.Count; i++)
-        {
-            Vector3 doorPos = node.DoorInfos[i]._doorPosition;
-
-            int doorXMin = Mathf.CeilToInt(doorPos.x - 3);
-            int doorXMax = Mathf.FloorToInt(doorPos.x + 3);
-            int doorZMin = Mathf.CeilToInt(doorPos.z - 3);
-            int doorZMax = Mathf.FloorToInt(doorPos.z + 3);
-
-            if (isHorizontal)
-            {
-                if ((doorXMin < wallXPos && wallXPos < doorXMax) && ((int)doorPos.z == wallZPos))
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                if ((doorZMin < wallZPos && wallZPos < doorZMax) && ((int)doorPos.x == wallXPos))
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private void CreatWall(int xPos, int zPos, float angle, GameObject parentObject)
-    {
-        GameObject instance = Instantiate(_wallPrefab, parentObject.transform);
-        instance.transform.position = new Vector3(xPos, 0, zPos);
-        instance.transform.eulerAngles = new Vector3(0, angle, 0);
-        instance.transform.localScale = Vector3.one;
     }
 
     private void TraverseNode(RoomNode node)
@@ -327,49 +210,5 @@ public class DungeonGenerator : MonoBehaviour
         }
             
         TraverseNode(node.Right);
-    }
-
-    private void MakePath(RoomNode node)
-    {
-        foreach(DoorInfo doorInfo in node.DoorInfos)
-        {
-            //복도 문 생성
-            GameObject instance = Instantiate(_doorwayPrefab);
-            instance.gameObject.name = doorInfo._name;
-            instance.transform.position = doorInfo._doorPosition;
-            instance.transform.rotation = doorInfo._doorRotation;
-            instance.transform.localScale = Vector3.one;
-
-            if (doorInfo._hasCorridor)
-            {
-                Vector3 newPos = doorInfo._doorPosition;
-                for (int i = 0; i < doorInfo._corridorLength; i++)
-                {
-                    GameObject corridorInstance = Instantiate(_corridor1mPrefab);
-                    switch (doorInfo._doorDirection)
-                    { 
-                        case eRelativeRectDirection.LEFT:
-                            newPos.x -= 1;
-                            break;
-                        case eRelativeRectDirection.RIGHT:
-                            newPos.x += 1;
-                            break;
-                        case eRelativeRectDirection.DOWN:
-                            newPos.z -= 1;
-                            break;
-                        case eRelativeRectDirection.UP:
-                            newPos.z += 1;
-                            break;
-                        case eRelativeRectDirection.NONE:
-                        default:
-                            break;
-                    }
-
-                    corridorInstance.transform.position = newPos;
-                    corridorInstance.transform.rotation = doorInfo._doorRotation;
-                    corridorInstance.transform.localScale = Vector3.one;
-                }
-            }
-        }
     }
 }

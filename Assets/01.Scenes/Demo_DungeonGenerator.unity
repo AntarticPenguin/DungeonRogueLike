@@ -2854,11 +2854,10 @@ MonoBehaviour:
   _divideRatio: 0.45
   _minRoomPadding: 2
   _maxRoomPadding: 4
-  _tilePrefab: {fileID: 1262025319411146, guid: 480d5741cd079db4c87b3e651ed9e86c, type: 3}
-  _wallPrefab: {fileID: 2608145392203057268, guid: 2da654a396179684fb1c897919aa482d, type: 3}
-  _doorwayPrefab: {fileID: 9101659585660211737, guid: 429b3d3c052d4ff45a89044ba266cf5c, type: 3}
+  _revisitNodeRatio: 0.25
+  _revisitPercentage: 0.3
+  _roomPrefab: {fileID: 3318777661252530746, guid: fa186e90985bcf041a00a435cafe01c3, type: 3}
   _backfillPrefab: {fileID: 1466677014816748, guid: 5f8ae757ab6cc1544a161b04da6b95df, type: 3}
-  _corridor1mPrefab: {fileID: 2562584972611617532, guid: abd2a8659f4d55e4986e66e72ad4b139, type: 3}
 --- !u!1001 &6161961861239293871
 PrefabInstance:
   m_ObjectHideFlags: 0
