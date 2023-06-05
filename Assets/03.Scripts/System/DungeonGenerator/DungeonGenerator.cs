@@ -59,7 +59,7 @@ public class DungeonGenerator : MonoBehaviour
         //복도 생성(방 연결)
         for (int i = 0; i < _leafNodes.Count; i++)
         {
-            DrawCorridor(_leafNodes[i]);
+            MakePath(_leafNodes[i]);
         }
     }
 
@@ -78,7 +78,7 @@ public class DungeonGenerator : MonoBehaviour
             FindAndAddNeighborNode(_leafNodes[i]);
         }
 
-        ConnectRooms();
+        MakePathInfo();
     }
 
     private void FindAndAddNeighborNode(RoomNode curNode)
@@ -120,9 +120,9 @@ public class DungeonGenerator : MonoBehaviour
             }
         }
 
-        foreach(List<Tuple<RoomNode, float>> neighborNodes in nodesByDirection)
+        foreach (List<Tuple<RoomNode, float>> neighborNodes in nodesByDirection)
         {
-            neighborNodes.Sort((lhs, rhs)=>
+            neighborNodes.Sort((lhs, rhs) =>
             {
                 return lhs.Item2.CompareTo(rhs.Item2);
             });
@@ -156,7 +156,7 @@ public class DungeonGenerator : MonoBehaviour
         return canMakeDoor;
     }
 
-    private void ConnectRooms()
+    private void MakePathInfo()
     {
         for (int i = 0; i < _leafNodes.Count; i++)
         {
@@ -164,7 +164,7 @@ public class DungeonGenerator : MonoBehaviour
 
             for (int j = 0; j < neighborNodes.Count; j++)
             {
-                _leafNodes[i].ConnectRoom(neighborNodes[j]);
+                _leafNodes[i].MakePathInfo(neighborNodes[j]);
             }
         }
     }
@@ -305,7 +305,7 @@ public class DungeonGenerator : MonoBehaviour
         TraverseNode(node.Right);
     }
 
-    private void DrawCorridor(RoomNode node)
+    private void MakePath(RoomNode node)
     {
         foreach(DoorInfo doorInfo in node.DoorInfos)
         {
@@ -318,7 +318,6 @@ public class DungeonGenerator : MonoBehaviour
 
             if (doorInfo._hasCorridor)
             {
-                //TODO: 방향을 알아야 포지션 수정함. x? z?
                 Vector3 newPos = doorInfo._doorPosition;
                 for (int i = 0; i < doorInfo._corridorLength; i++)
                 {

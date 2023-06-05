@@ -78,7 +78,7 @@ public class RoomNode
         _roomSize = new RectInt(x, y, roomWidth, roomHeight);
     }
 
-    public void ConnectRoom(RoomNode toNode)
+    public void MakePathInfo(RoomNode toNode)
     {
         for (int i = 0; i < _connectedNodes.Count; i++)
         {
