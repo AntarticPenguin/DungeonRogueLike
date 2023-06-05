@@ -23,6 +23,12 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] int _minRoomPadding = 1;
     [SerializeField] int _maxRoomPadding = 3;
 
+    [SerializeField, Range(0.0f, 1.0f)]
+    private float _revisitNodeRatio = 0.25f;
+
+    [SerializeField, Range(0.0f, 1.0f)]
+    private float _revisitPercentage = 0.3f;
+
     [Header("Assets")]
     [SerializeField] GameObject _tilePrefab;
     [SerializeField] GameObject _wallPrefab;
@@ -177,7 +183,7 @@ public class DungeonGenerator : MonoBehaviour
                 }
                 else
                 {
-                    if (((float)revisit / _leafNodes.Count < 0.25f) && UnityEngine.Random.value > 0.7f)
+                    if (((float)revisit / _leafNodes.Count < _revisitNodeRatio) && UnityEngine.Random.value > 1 - _revisitPercentage)
                     {
                         curNode.MakePathInfo(neighborNode);
                         revisit++;
