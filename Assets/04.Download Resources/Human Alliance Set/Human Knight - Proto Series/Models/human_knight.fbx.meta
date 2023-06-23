@@ -1,142 +1,410 @@
 fileFormatVersion: 2
 guid: c4c8a6757cad4ee43934cc6280347007
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: arms_human_knight
-    100002: ball_l
-    100004: ball_r
-    100006: calf_l
-    100008: calf_r
-    100010: chest_human_knight
-    100012: clavicle_l
-    100014: clavicle_r
-    100016: face_guard
-    100018: face_plate_human_knight
-    100020: foot_l
-    100022: foot_r
-    100024: hand_l
-    100026: hand_r
-    100028: hat
-    100030: head
-    100032: head_human_knight
-    100034: hip_human_knight
-    100036: //RootNode
-    100038: index_01_l
-    100040: index_01_r
-    100042: index_02_l
-    100044: index_02_r
-    100046: index_03_l
-    100048: index_03_r
-    100050: legs_human_knight
-    100052: lowerarm_l
-    100054: lowerarm_r
-    100056: middle_01_l
-    100058: middle_01_r
-    100060: middle_02_l
-    100062: middle_02_r
-    100064: middle_03_l
-    100066: middle_03_r
-    100068: neck_01
-    100070: pelvis
-    100072: pupil_left
-    100074: pupil_right
-    100076: ring_01_l
-    100078: ring_01_r
-    100080: ring_02_l
-    100082: ring_02_r
-    100084: ring_03_l
-    100086: ring_03_r
-    100088: root
-    100090: sholder_pad_left
-    100092: sholder_pad_right
-    100094: spine_01
-    100096: spine_02
-    100098: spine_03
-    100100: thigh_l
-    100102: thigh_r
-    100104: thumb_01_l
-    100106: thumb_01_r
-    100108: thumb_02_l
-    100110: thumb_02_r
-    100112: thumb_03_l
-    100114: thumb_03_r
-    100116: upperarm_l
-    100118: upperarm_r
-    400000: arms_human_knight
-    400002: ball_l
-    400004: ball_r
-    400006: calf_l
-    400008: calf_r
-    400010: chest_human_knight
-    400012: clavicle_l
-    400014: clavicle_r
-    400016: face_guard
-    400018: face_plate_human_knight
-    400020: foot_l
-    400022: foot_r
-    400024: hand_l
-    400026: hand_r
-    400028: hat
-    400030: head
-    400032: head_human_knight
-    400034: hip_human_knight
-    400036: //RootNode
-    400038: index_01_l
-    400040: index_01_r
-    400042: index_02_l
-    400044: index_02_r
-    400046: index_03_l
-    400048: index_03_r
-    400050: legs_human_knight
-    400052: lowerarm_l
-    400054: lowerarm_r
-    400056: middle_01_l
-    400058: middle_01_r
-    400060: middle_02_l
-    400062: middle_02_r
-    400064: middle_03_l
-    400066: middle_03_r
-    400068: neck_01
-    400070: pelvis
-    400072: pupil_left
-    400074: pupil_right
-    400076: ring_01_l
-    400078: ring_01_r
-    400080: ring_02_l
-    400082: ring_02_r
-    400084: ring_03_l
-    400086: ring_03_r
-    400088: root
-    400090: sholder_pad_left
-    400092: sholder_pad_right
-    400094: spine_01
-    400096: spine_02
-    400098: spine_03
-    400100: thigh_l
-    400102: thigh_r
-    400104: thumb_01_l
-    400106: thumb_01_r
-    400108: thumb_02_l
-    400110: thumb_02_r
-    400112: thumb_03_l
-    400114: thumb_03_r
-    400116: upperarm_l
-    400118: upperarm_r
-    2100000: knight_mat
-    4300000: chest_human_knight
-    4300002: hip_human_knight
-    4300004: face_plate_human_knight
-    4300006: head_human_knight
-    4300008: arms_human_knight
-    4300010: legs_human_knight
-    9500000: //RootNode
-    13700000: arms_human_knight
-    13700002: chest_human_knight
-    13700004: face_plate_human_knight
-    13700006: head_human_knight
-    13700008: hip_human_knight
-    13700010: legs_human_knight
+  serializedVersion: 21300
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: arms_human_knight
+  - first:
+      1: 100002
+    second: ball_l
+  - first:
+      1: 100004
+    second: ball_r
+  - first:
+      1: 100006
+    second: calf_l
+  - first:
+      1: 100008
+    second: calf_r
+  - first:
+      1: 100010
+    second: chest_human_knight
+  - first:
+      1: 100012
+    second: clavicle_l
+  - first:
+      1: 100014
+    second: clavicle_r
+  - first:
+      1: 100016
+    second: face_guard
+  - first:
+      1: 100018
+    second: face_plate_human_knight
+  - first:
+      1: 100020
+    second: foot_l
+  - first:
+      1: 100022
+    second: foot_r
+  - first:
+      1: 100024
+    second: hand_l
+  - first:
+      1: 100026
+    second: hand_r
+  - first:
+      1: 100028
+    second: hat
+  - first:
+      1: 100030
+    second: head
+  - first:
+      1: 100032
+    second: head_human_knight
+  - first:
+      1: 100034
+    second: hip_human_knight
+  - first:
+      1: 100036
+    second: //RootNode
+  - first:
+      1: 100038
+    second: index_01_l
+  - first:
+      1: 100040
+    second: index_01_r
+  - first:
+      1: 100042
+    second: index_02_l
+  - first:
+      1: 100044
+    second: index_02_r
+  - first:
+      1: 100046
+    second: index_03_l
+  - first:
+      1: 100048
+    second: index_03_r
+  - first:
+      1: 100050
+    second: legs_human_knight
+  - first:
+      1: 100052
+    second: lowerarm_l
+  - first:
+      1: 100054
+    second: lowerarm_r
+  - first:
+      1: 100056
+    second: middle_01_l
+  - first:
+      1: 100058
+    second: middle_01_r
+  - first:
+      1: 100060
+    second: middle_02_l
+  - first:
+      1: 100062
+    second: middle_02_r
+  - first:
+      1: 100064
+    second: middle_03_l
+  - first:
+      1: 100066
+    second: middle_03_r
+  - first:
+      1: 100068
+    second: neck_01
+  - first:
+      1: 100070
+    second: pelvis
+  - first:
+      1: 100072
+    second: pupil_left
+  - first:
+      1: 100074
+    second: pupil_right
+  - first:
+      1: 100076
+    second: ring_01_l
+  - first:
+      1: 100078
+    second: ring_01_r
+  - first:
+      1: 100080
+    second: ring_02_l
+  - first:
+      1: 100082
+    second: ring_02_r
+  - first:
+      1: 100084
+    second: ring_03_l
+  - first:
+      1: 100086
+    second: ring_03_r
+  - first:
+      1: 100088
+    second: root
+  - first:
+      1: 100090
+    second: sholder_pad_left
+  - first:
+      1: 100092
+    second: sholder_pad_right
+  - first:
+      1: 100094
+    second: spine_01
+  - first:
+      1: 100096
+    second: spine_02
+  - first:
+      1: 100098
+    second: spine_03
+  - first:
+      1: 100100
+    second: thigh_l
+  - first:
+      1: 100102
+    second: thigh_r
+  - first:
+      1: 100104
+    second: thumb_01_l
+  - first:
+      1: 100106
+    second: thumb_01_r
+  - first:
+      1: 100108
+    second: thumb_02_l
+  - first:
+      1: 100110
+    second: thumb_02_r
+  - first:
+      1: 100112
+    second: thumb_03_l
+  - first:
+      1: 100114
+    second: thumb_03_r
+  - first:
+      1: 100116
+    second: upperarm_l
+  - first:
+      1: 100118
+    second: upperarm_r
+  - first:
+      4: 400000
+    second: arms_human_knight
+  - first:
+      4: 400002
+    second: ball_l
+  - first:
+      4: 400004
+    second: ball_r
+  - first:
+      4: 400006
+    second: calf_l
+  - first:
+      4: 400008
+    second: calf_r
+  - first:
+      4: 400010
+    second: chest_human_knight
+  - first:
+      4: 400012
+    second: clavicle_l
+  - first:
+      4: 400014
+    second: clavicle_r
+  - first:
+      4: 400016
+    second: face_guard
+  - first:
+      4: 400018
+    second: face_plate_human_knight
+  - first:
+      4: 400020
+    second: foot_l
+  - first:
+      4: 400022
+    second: foot_r
+  - first:
+      4: 400024
+    second: hand_l
+  - first:
+      4: 400026
+    second: hand_r
+  - first:
+      4: 400028
+    second: hat
+  - first:
+      4: 400030
+    second: head
+  - first:
+      4: 400032
+    second: head_human_knight
+  - first:
+      4: 400034
+    second: hip_human_knight
+  - first:
+      4: 400036
+    second: //RootNode
+  - first:
+      4: 400038
+    second: index_01_l
+  - first:
+      4: 400040
+    second: index_01_r
+  - first:
+      4: 400042
+    second: index_02_l
+  - first:
+      4: 400044
+    second: index_02_r
+  - first:
+      4: 400046
+    second: index_03_l
+  - first:
+      4: 400048
+    second: index_03_r
+  - first:
+      4: 400050
+    second: legs_human_knight
+  - first:
+      4: 400052
+    second: lowerarm_l
+  - first:
+      4: 400054
+    second: lowerarm_r
+  - first:
+      4: 400056
+    second: middle_01_l
+  - first:
+      4: 400058
+    second: middle_01_r
+  - first:
+      4: 400060
+    second: middle_02_l
+  - first:
+      4: 400062
+    second: middle_02_r
+  - first:
+      4: 400064
+    second: middle_03_l
+  - first:
+      4: 400066
+    second: middle_03_r
+  - first:
+      4: 400068
+    second: neck_01
+  - first:
+      4: 400070
+    second: pelvis
+  - first:
+      4: 400072
+    second: pupil_left
+  - first:
+      4: 400074
+    second: pupil_right
+  - first:
+      4: 400076
+    second: ring_01_l
+  - first:
+      4: 400078
+    second: ring_01_r
+  - first:
+      4: 400080
+    second: ring_02_l
+  - first:
+      4: 400082
+    second: ring_02_r
+  - first:
+      4: 400084
+    second: ring_03_l
+  - first:
+      4: 400086
+    second: ring_03_r
+  - first:
+      4: 400088
+    second: root
+  - first:
+      4: 400090
+    second: sholder_pad_left
+  - first:
+      4: 400092
+    second: sholder_pad_right
+  - first:
+      4: 400094
+    second: spine_01
+  - first:
+      4: 400096
+    second: spine_02
+  - first:
+      4: 400098
+    second: spine_03
+  - first:
+      4: 400100
+    second: thigh_l
+  - first:
+      4: 400102
+    second: thigh_r
+  - first:
+      4: 400104
+    second: thumb_01_l
+  - first:
+      4: 400106
+    second: thumb_01_r
+  - first:
+      4: 400108
+    second: thumb_02_l
+  - first:
+      4: 400110
+    second: thumb_02_r
+  - first:
+      4: 400112
+    second: thumb_03_l
+  - first:
+      4: 400114
+    second: thumb_03_r
+  - first:
+      4: 400116
+    second: upperarm_l
+  - first:
+      4: 400118
+    second: upperarm_r
+  - first:
+      21: 2100000
+    second: knight_mat
+  - first:
+      43: 4300000
+    second: chest_human_knight
+  - first:
+      43: 4300002
+    second: hip_human_knight
+  - first:
+      43: 4300004
+    second: face_plate_human_knight
+  - first:
+      43: 4300006
+    second: head_human_knight
+  - first:
+      43: 4300008
+    second: arms_human_knight
+  - first:
+      43: 4300010
+    second: legs_human_knight
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: arms_human_knight
+  - first:
+      137: 13700002
+    second: chest_human_knight
+  - first:
+      137: 13700004
+    second: face_plate_human_knight
+  - first:
+      137: 13700006
+    second: head_human_knight
+  - first:
+      137: 13700008
+    second: hip_human_knight
+  - first:
+      137: 13700010
+    second: legs_human_knight
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -144,7 +412,7 @@ ModelImporter:
       name: knight_mat
     second: {fileID: 2100000, guid: d58246bcacad12b40b8a8eb2037b76f7, type: 2}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -153,6 +421,7 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
     motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
@@ -177,25 +446,34 @@ ModelImporter:
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    bakeAxisConversion: 0
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.01
-    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -204,331 +482,11 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 0
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
-    human:
-    - boneName: pelvis
-      humanName: Hips
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: thigh_l
-      humanName: LeftUpperLeg
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: thigh_r
-      humanName: RightUpperLeg
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: calf_l
-      humanName: LeftLowerLeg
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: calf_r
-      humanName: RightLowerLeg
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: foot_l
-      humanName: LeftFoot
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: foot_r
-      humanName: RightFoot
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: spine_01
-      humanName: Spine
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: spine_02
-      humanName: Chest
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: head
-      humanName: Head
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: clavicle_l
-      humanName: LeftShoulder
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: clavicle_r
-      humanName: RightShoulder
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: upperarm_l
-      humanName: LeftUpperArm
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: upperarm_r
-      humanName: RightUpperArm
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: lowerarm_l
-      humanName: LeftLowerArm
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: lowerarm_r
-      humanName: RightLowerArm
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: hand_l
-      humanName: LeftHand
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: hand_r
-      humanName: RightHand
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: ball_l
-      humanName: LeftToes
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: ball_r
-      humanName: RightToes
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: pupil_left
-      humanName: LeftEye
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: pupil_right
-      humanName: RightEye
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: face_guard
-      humanName: Jaw
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: thumb_01_l
-      humanName: Left Thumb Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: thumb_02_l
-      humanName: Left Thumb Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: index_01_l
-      humanName: Left Index Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: index_02_l
-      humanName: Left Index Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: middle_01_l
-      humanName: Left Middle Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: middle_02_l
-      humanName: Left Middle Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: ring_01_l
-      humanName: Left Ring Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: ring_02_l
-      humanName: Left Ring Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: thumb_01_r
-      humanName: Right Thumb Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: thumb_02_r
-      humanName: Right Thumb Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: index_01_r
-      humanName: Right Index Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: index_02_r
-      humanName: Right Index Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: middle_01_r
-      humanName: Right Middle Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: middle_02_r
-      humanName: Right Middle Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: ring_01_r
-      humanName: Right Ring Proximal
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: ring_02_r
-      humanName: Right Ring Intermediate
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
-    - boneName: spine_03
-      humanName: UpperChest
-      limit:
-        min: {x: 0, y: 0, z: 0}
-        max: {x: 0, y: 0, z: 0}
-        value: {x: 0, y: 0, z: 0}
-        length: 0
-        modified: 0
+    serializedVersion: 3
+    human: []
     skeleton:
     - name: human_knight(Clone)
       parentName: 
@@ -837,13 +795,18 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
   additionalBone: 0
   userData: 
   assetBundleName: 
