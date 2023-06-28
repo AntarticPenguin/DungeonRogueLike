@@ -79,6 +79,7 @@ namespace MyBehaviourTree
 
         public BehaviourTree Build()
         {
+            _tree.SyncNode(_tree.Root);
             return _tree;
         }
     }

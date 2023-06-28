@@ -16,7 +16,6 @@ namespace MyBehaviourTree
         public BehaviourTree(GameObject owner)
         {
             _owner = owner;
-            SyncNode(Root);
         }
 
         public void Tick()
@@ -24,20 +23,23 @@ namespace MyBehaviourTree
             Root.Evaluate();
         }
 
-        private void SyncNode(ITaskParent parent)
+        /// <summary>
+        /// Setup Root Tree
+        /// </summary>
+        public void SyncNode(ITaskParent taskParent)
         {
-            parent.Owner = _owner;
-            parent.RootTree = this;
+            taskParent.Owner = _owner;
+            taskParent.RootTree = this;
 
-            foreach(ITask child in parent.Children)
+            foreach(ITask child in taskParent.Children)
             {
                 child.Owner = _owner;
                 child.RootTree = this;
 
-                var parentTask = child as ITaskParent;
-                if(null != parentTask)
+                var parent = child as ITaskParent;
+                if(null != parent)
                 {
-                    SyncNode(parentTask);
+                    SyncNode(parent);
                 }
             }
         }
