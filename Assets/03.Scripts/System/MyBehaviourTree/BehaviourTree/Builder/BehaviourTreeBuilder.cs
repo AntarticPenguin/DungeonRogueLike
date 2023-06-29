@@ -55,6 +55,19 @@ namespace MyBehaviourTree
             return this;
         }
 
+        public BehaviourTreeBuilder Wait(float waitTime)
+        {
+            if (_parentNodeStack.Count <= 0)
+            {
+                throw new Exception("Tree has no root node. Check your script");
+            }
+
+            WaitNode waitNode = new WaitNode("Wait", waitTime);
+            _parentNodeStack.Peek().AddChild(waitNode);
+
+            return this;
+        }
+
         public BehaviourTreeBuilder Splice(BehaviourTree subTree)
         {
             if(null == subTree)

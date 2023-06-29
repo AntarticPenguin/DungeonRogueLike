@@ -8,6 +8,7 @@ public class TestBehaviour : MonoBehaviour
     private BehaviourTree tree1;
     private BehaviourTree tree2;
     private BehaviourTree tree3;
+    private BehaviourTree waitTest;
 
     private void Start()
     {
@@ -17,7 +18,8 @@ public class TestBehaviour : MonoBehaviour
     private void Update()
     {
         //tree1.Tick();
-        tree2.Tick();
+        //tree2.Tick();
+        waitTest.Tick();
     }
 
     private void SetupTree()
@@ -60,6 +62,22 @@ public class TestBehaviour : MonoBehaviour
                         return eTaskState.SUCCESS;
                     })
                 .End()
+            .End()
+            .Build();
+
+        waitTest = new BehaviourTreeBuilder(gameObject)
+            .Sequence()
+                .Do("Log Action", () =>
+                {
+                    Debug.Log("Wait Start");
+                    return eTaskState.SUCCESS;
+                })
+                .Wait(5.0f)
+                .Do("Log Action", () =>
+                {
+                    Debug.Log("Wait End");
+                    return eTaskState.SUCCESS;
+                })
             .End()
             .Build();
     }
