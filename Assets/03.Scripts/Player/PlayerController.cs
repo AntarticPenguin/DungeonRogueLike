@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
 public class PlayerController : MonoBehaviour
 {
     #region Inspector
@@ -16,13 +16,10 @@ public class PlayerController : MonoBehaviour
     private Animator _animator;
     private StateMachine<PlayerController> _stateMachine;
 
-    private Vector3 _inputDirection;
-    private bool _isPressAttack;
-
     #region Properties
     public Animator Animator => _animator;
-    public Vector3 InputDirection => _inputDirection;
-    public bool IsPressAttack => _isPressAttack;
+    public AnimationCallback AnimationCallback { get; private set; }
+    public PlayerInput PlayerInput { get; private set; }
     public float MoveSpeed => _moveSpeed;
     public float TurnSmoothTime => _turnSmoothTime;
     #endregion
@@ -31,20 +28,15 @@ public class PlayerController : MonoBehaviour
 	{
 		_controller = GetComponent<CharacterController>();
         _animator = _modelRoot.GetComponentInChildren<Animator>();
-		_transform = transform;
-
-        _inputDirection = Vector3.zero;
+        AnimationCallback = _modelRoot.GetComponentInChildren<AnimationCallback>();
+        PlayerInput = GetComponent<PlayerInput>();
+        _transform = transform;
 
         InitState();
 	}
 
 	private void Update()
 	{
-		float horizontal = Input.GetAxisRaw("Horizontal");
-		float vertical = Input.GetAxisRaw("Vertical");
-        _isPressAttack = Input.GetMouseButtonDown(0);
-        _inputDirection = new Vector3(horizontal, 0, vertical).normalized;
-
         _stateMachine.Update(Time.deltaTime);
 	}
 
@@ -53,5 +45,13 @@ public class PlayerController : MonoBehaviour
         _stateMachine = new StateMachine<PlayerController>(this, new PlayerIdleState());
         _stateMachine.AddState(new PlayerAttackState());
         _stateMachine.AddState(new PlayerMoveState());
+    }
+
+    private void OnGUI()
+    {
+        if(null != _stateMachine)
+        {
+            GUI.Label(new Rect(10, 10, 150, 50), _stateMachine.CurrentState.GetType().Name);
+        }
     }
 }
